@@ -28,7 +28,7 @@ library
   
   other-modules:      Control.Proxy.IRC.Internal.Parser
   
-  build-depends:       base ==4.6.*,
+  build-depends:       base > 4.5,
                        pipes ==3.3.*,
                        pipes-network ==0.5.*,
                        network ==2.4.*,
