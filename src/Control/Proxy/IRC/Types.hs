@@ -5,6 +5,7 @@
 module Control.Proxy.IRC.Types where
 
 import Control.Proxy
+import Control.Monad.IO.Class (MonadIO)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Char8 as C8
 import Data.Map (Map)
@@ -28,7 +29,7 @@ data IRCSettings = IRCSettings
    , trigger      :: !ByteString
    }
 
-type MsgHook = (Proxy p, Monad m)
+type MsgHook = (Proxy p, MonadIO m, Monad m)
                => IRCSettings
                -> () -> Pipe p Message Command m r
    
