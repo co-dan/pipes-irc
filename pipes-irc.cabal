@@ -1,0 +1,43 @@
+name:                pipes-irc
+version:             0.1.0
+
+synopsis:            A Proxy interface to the Internet Relay Chat
+
+-- A longer description of the package.
+-- description:         
+
+license:             BSD3
+license-file:        LICENSE
+
+author:              Dan Frumin
+maintainer:          difrumin@gmail.com
+
+category:            Network
+
+build-type:          Simple
+
+cabal-version:       >=1.8
+
+
+library
+  exposed-modules:    Control.Proxy.IRC,
+                      Control.Proxy.IRC.Types,
+                      Control.Proxy.IRC.Proxies,
+                      Control.Proxy.IRC.Run,
+                      Control.Proxy.IRC.Util
+  
+  other-modules:      Control.Proxy.IRC.Internal.Parser
+  
+  build-depends:       base ==4.6.*,
+                       pipes ==3.3.*,
+                       pipes-network ==0.5.*,
+                       network ==2.4.*,
+                       safe ==0.3.*,
+                       bytestring >= 0.10.0,
+                       containers >= 0.5.0,
+                       attoparsec >=0.10.4,
+                       errors >=1.4.2,
+                       transformers >=0.3.0
+  
+  hs-source-dirs:      src
+  
