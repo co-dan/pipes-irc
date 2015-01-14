@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 -- | Taken from the @fastirc@ library
 -- (c) Ertugrul Söylemez
-module Control.Proxy.IRC.Internal.Parser where
+module Pipes.Network.IRC.Internal.Parser where
 
 import Control.Applicative
 import Control.Monad
@@ -9,13 +9,12 @@ import Data.Attoparsec.ByteString.Char8 as P
 import Data.Char (toUpper)
 import Data.Set (Set)
 import qualified Data.Set as S
-import Data.Map (Map)
 import qualified Data.Map as M
 
 import qualified Data.ByteString.Char8 as C8
   
 
-import Control.Proxy.IRC.Types
+import Pipes.Network.IRC.Types
 
 -- | Run a parser completely.
 parseComplete :: Parser a -> C8.ByteString -> Maybe a
@@ -24,7 +23,7 @@ parseComplete p = complete . parse p
     complete :: Result a -> Maybe a
     complete (Partial f)  = complete (f C8.empty)
     complete (Done _ r)   = Just r
-    complete (Fail _ _ _) = Nothing
+    complete (Fail{})= Nothing
 
 
 -- | Parser for IRC messages.

@@ -1,22 +1,21 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE RankNTypes        #-}
 -- | A lot of this code is taken from the @fastirc@ library
 -- by Ertugrul Söylemez
-module Control.Proxy.IRC.Types where
+module Pipes.Network.IRC.Types where
 
-import Pipes
-import Control.Monad.IO.Class (MonadIO)
-import Data.ByteString (ByteString)
+import           Data.ByteString       (ByteString)
 import qualified Data.ByteString.Char8 as C8
-import Data.Map (Map)
-import qualified Data.Map as M
-import Data.Maybe (isJust, fromJust)
-import Data.Monoid
-import Data.Set (Set)
-import qualified Data.Set as S
-import Network.Socket (ServiceName)
+import           Data.Map              (Map)
+import qualified Data.Map              as M
+import           Data.Maybe            (fromJust, isJust)
+import           Data.Monoid
+import           Data.Set              (Set)
+import qualified Data.Set              as S
+import           Network.Socket        (ServiceName)
 import qualified Network.Socket
-import Text.Printf
+import           Pipes
+import           Text.Printf
 
 
 data IRCSettings = IRCSettings
@@ -32,7 +31,7 @@ data IRCSettings = IRCSettings
 type MsgHook = (MonadIO m, Monad m)
                => IRCSettings
                -> Pipe Message Command m r
-   
+
 type ChannelKey  = ByteString
 type ChannelName = ByteString
 type CommandArg  = ByteString
@@ -42,11 +41,11 @@ type NickName    = ByteString
 type ServerName  = ByteString
 type TargetName  = ByteString
 type UserName    = ByteString
-                   
+
 data User = Nick NickName
-          | User NickName UserName HostName            
+          | User NickName UserName HostName
           deriving (Eq)
-                   
+
 instance Show User where
   show (Nick n) = C8.unpack (n <> ":_@_")
   show (User n u h) = C8.unpack $ mconcat [n, ":", u, "@", h]
@@ -70,18 +69,18 @@ data Command
   | TopicCmd    ChannelName (Maybe CommandArg)
   | UserCmd     UserName CommandArg CommandArg CommandArg
   deriving (Eq, Read, Show)
-           
+
 isPingCmd :: Command -> Bool
 isPingCmd (PingCmd _ _) = True
 isPingCmd _           = False
-                        
+
 data Message =
   Message {
     msgOrigin  :: !(Maybe User), -- ^ Message origin (user/server).
     msgCommand :: !Command           -- ^ Message command or numeric.
   } deriving (Eq, Show)
 
-             
+
 showMessage :: Message -> ByteString
 showMessage (Message origin cmd) =
   case origin of
@@ -92,7 +91,7 @@ showMessage (Message origin cmd) =
 
 showCommand :: Command -> ByteString
 showCommand = (`C8.snoc` '\n') . showCommand'
-              
+
 showCommand' :: Command -> ByteString
 showCommand' cmd =
   case cmd of

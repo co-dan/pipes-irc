@@ -1,25 +1,23 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards   #-}
 -- | Various proxies that help handling the IRC business
-module Control.Proxy.IRC.Proxies where
+module Pipes.Network.IRC.Core where
 
-import Pipes
-import qualified Pipes.Prelude as P
-import Pipes.Network.TCP
-import Control.Monad (forever, (>=>))
-import Data.ByteString (ByteString)
-import qualified Data.ByteString as BS  
-import Data.Function (fix)
-import qualified Data.Set as S
-import Network.Socket (Socket)
+import           Control.Monad                     (forever)
+import           Data.ByteString                   (ByteString)
+import qualified Data.ByteString                   as BS
+import qualified Data.Set                          as S
+import           Pipes
+import           Pipes.Network.TCP
+import qualified Pipes.Prelude                     as P
 
-import Control.Proxy.IRC.Internal.Parser
-import Control.Proxy.IRC.Types
+import           Pipes.Network.IRC.Internal.Parser
+import           Pipes.Network.IRC.Types
 
 
 -- | Proxy that parses IRC messages
 parseMsg :: (Monad m)
-          => Pipe  ByteString (Maybe Message) m r
+          => Pipe ByteString (Maybe Message) m r
 parseMsg = forever $
     await >>= yield . parseComplete messageParser
 
@@ -40,8 +38,8 @@ filterMsg (IRCSettings{..}) = loop
           case msgCommand msg of
             PrivMsgCmd targets txt -> do
               let me = S.insert nick channels
-              if ((trigger `BS.isPrefixOf` txt)
-                  && (not . S.null $ me `S.intersection` targets))
+              if (trigger `BS.isPrefixOf` txt)
+                 && (not . S.null $ me `S.intersection` targets)
                then yield msg >> loop
                else loop
             _ -> loop

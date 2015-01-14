@@ -1,7 +1,7 @@
 name:                pipes-irc
-version:             0.1.0
+version:             0.1
 
-synopsis:            A Proxy interface to the Internet Relay Chat
+synopsis:            Pipes interface to the Internet Relay Chat
 
 license:             BSD3
 license-file:        LICENSE
@@ -17,25 +17,22 @@ cabal-version:       >=1.8
 
 
 library
-  exposed-modules:    Control.Proxy.IRC,
-                      Control.Proxy.IRC.Types,
-                      Control.Proxy.IRC.Proxies,
-                      Control.Proxy.IRC.Run,
-                      Control.Proxy.IRC.Util
+  exposed-modules:    Pipes.Network.IRC,
+                      Pipes.Network.IRC.Types,
+                      Pipes.Network.IRC.Core,
+                      Pipes.Network.IRC.Run,
+                      Pipes.Network.IRC.Util
   
-  other-modules:      Control.Proxy.IRC.Internal.Parser
+  other-modules:      Pipes.Network.IRC.Internal.Parser
   
   build-depends:       base > 4.5,
                        pipes >=4,
                        pipes-network ==0.6.*,
                        network,
-                       safe,
                        bytestring,
                        containers,
                        attoparsec,
-                       errors,
-                       mtl >= 2.2.1,
-                       transformers ==0.4.*
+                       mtl >= 2.2.1
   
   hs-source-dirs:      src
   

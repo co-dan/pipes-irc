@@ -1,28 +1,25 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
-module Control.Proxy.IRC (
+module Pipes.Network.IRC (
   defSettings, runIrc,
-  module Control.Proxy.IRC.Types,
-  module Control.Proxy.IRC.Util,
-  module Control.Proxy.IRC.Run,
-  module Control.Proxy.IRC.Proxies
+  module Pipes.Network.IRC.Types,
+  module Pipes.Network.IRC.Util,
+  module Pipes.Network.IRC.Run,
+  module Pipes.Network.IRC.Core
   ) where
 
 
-import Prelude hiding (drop)
+import           Prelude                 hiding (drop)
 
-import Pipes
-import Pipes.Network.TCP
-import Data.ByteString (ByteString, drop)
-import Data.Function (fix)
-import qualified Data.Set as S
-import Network.Socket (Socket)
-import qualified Network.Socket.ByteString as S
+import           Data.ByteString         (drop)
+import           Data.Function           (fix)
+import qualified Data.Set                as S
 
-import Control.Proxy.IRC.Proxies  
-import Control.Proxy.IRC.Run
-import Control.Proxy.IRC.Types 
-import Control.Proxy.IRC.Util
+import           Pipes
+import           Pipes.Network.IRC.Core
+import           Pipes.Network.IRC.Run
+import           Pipes.Network.IRC.Types
+import           Pipes.Network.IRC.Util
 
 defSettings :: IRCSettings
 defSettings = IRCSettings
@@ -34,14 +31,13 @@ defSettings = IRCSettings
    , trigger      = "> "
    , hook         = myHook
    }
-                    
 
 myHook :: MsgHook
 myHook IRCSettings{..} = fix $ \loop -> do
   msg <- await
   case msgCommand msg of
     PrivMsgCmd targets txt -> do
-      let m = drop 2 txt   
+      let m = drop 2 txt
       yield $ PrivMsgCmd (nick `S.delete` targets) m
       loop
     _ -> loop
